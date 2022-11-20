@@ -1,48 +1,53 @@
 <template>
-  <view class="scroll-view-container">
-    <!-- 左侧的滑动区域 -->
-    <scroll-view
-      class="left-scroll-view"
-      scroll-y="true"
-      :style="{ height: `${wh}px` }"
-    >
-      <block v-for="(item, i) in cateList" :key="i">
-        <view
-          @click="activeChanged(i)"
-          :class="['left-scroll-view-item', i === active ? 'active' : '']"
-          >{{ item.cat_name }}</view
-        >
-      </block>
-    </scroll-view>
-    <!-- 右侧的滑动区域 -->
-    <scroll-view
-      scroll-y="true"
-      :style="{ height: `${wh}px` }"
-      :scroll-top="scrollTop"
-    >
-      <view class="cate-lv2" v-for="(item2, i2) in cateLevel2" :key="i2">
-        <!-- 二级分类的标题 -->
-        <view class="cate-lv2-title">/{{ item2.cat_name }}/ </view>
-        <!-- 当前二级分类下的三级分类列表 -->
-        <view class="cate-lv3-list">
-          <!-- 三级分类的 Item项 -->
+  <view>
+    <!-- 使用自定义的搜索组件 -->
+    <!-- <my-search :bgcolor="'pink'" :radius="3"></my-search> -->
+    <my-search @click="gotoSearch"></my-search>
+    <view class="scroll-view-container">
+      <!-- 左侧的滑动区域 -->
+      <scroll-view
+        class="left-scroll-view"
+        scroll-y="true"
+        :style="{ height: `${wh}px` }"
+      >
+        <block v-for="(item, i) in cateList" :key="i">
           <view
-            class="cate-lv3-item"
-            v-for="(item3, i3) in item2.children"
-            :key="i3"
-            @click="gotoGoodsList(item3)"
+            @click="activeChanged(i)"
+            :class="['left-scroll-view-item', i === active ? 'active' : '']"
+            >{{ item.cat_name }}</view
           >
-            <!-- 三级分类的图片 -->
-            <image
-              :src="item3.cat_icon.replace('dev', 'web')"
-              mode="widthFix"
-            />
-            <!-- 三级分类的文本 -->
-            <text>{{ item3.cat_name }} </text>
+        </block>
+      </scroll-view>
+      <!-- 右侧的滑动区域 -->
+      <scroll-view
+        scroll-y="true"
+        :style="{ height: `${wh}px` }"
+        :scroll-top="scrollTop"
+      >
+        <view class="cate-lv2" v-for="(item2, i2) in cateLevel2" :key="i2">
+          <!-- 二级分类的标题 -->
+          <view class="cate-lv2-title">/{{ item2.cat_name }}/ </view>
+          <!-- 当前二级分类下的三级分类列表 -->
+          <view class="cate-lv3-list">
+            <!-- 三级分类的 Item项 -->
+            <view
+              class="cate-lv3-item"
+              v-for="(item3, i3) in item2.children"
+              :key="i3"
+              @click="gotoGoodsList(item3)"
+            >
+              <!-- 三级分类的图片 -->
+              <image
+                :src="item3.cat_icon.replace('dev', 'web')"
+                mode="widthFix"
+              />
+              <!-- 三级分类的文本 -->
+              <text>{{ item3.cat_name }} </text>
+            </view>
           </view>
         </view>
-      </view>
-    </scroll-view>
+      </scroll-view>
+    </view>
   </view>
 </template>
 
@@ -64,7 +69,7 @@ export default {
   onLoad () {
     const sysInfo = uni.getSystemInfoSync()
     // 拿到当前屏幕可见高度 windowHeight
-    this.wh = sysInfo.windowHeight
+    this.wh = sysInfo.windowHeight - 50
 
     this.getCateList()
   },
@@ -100,6 +105,11 @@ export default {
 
       })
 
+    },
+    gotoSearch () {
+      uni.navigateTo({
+        url: '/subpkg/search/search'
+      })
     }
   }
 }

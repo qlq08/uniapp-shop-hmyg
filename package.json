@@ -1,0 +1,11 @@
+{
+  "name": "uni-shop-hmyg",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:qlq08/uniapp-shop-hmyg.git",
+  "author": "qiulongquan <2071675988@qq.com>",
+  "license": "MIT",
+  "dependencies": {
+    "@escook/request-miniprogram": "^0.2.1"
+  }
+}

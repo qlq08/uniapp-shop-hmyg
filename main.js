@@ -2,7 +2,7 @@
 // #ifndef VUE3
 import Vue from 'vue'
 import App from './App'
-
+import store from './store/store'
 // 按需导入 $http 对象,导入网络请求的包
 import { $http } from '@escook/request-miniprogram'
 // 将按需导入的 $http 挂载到 uni 顶级对象之上，方便全局调用
@@ -35,7 +35,8 @@ Vue.config.productionTip = false
 App.mpType = 'app'
 
 const app = new Vue({
-  ...App
+  ...App,
+  store
 })
 app.$mount()
 // #endif

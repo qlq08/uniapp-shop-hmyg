@@ -1,19 +1,18 @@
 <template>
-  <view>
-    my
-  </view>
+  <view> my </view>
 </template>
 
 <script>
-  export default {
-    data() {
-      return {
-        
-      };
+import badgeMix from '../../mixins/tabbar_badge'
+export default {
+  mixins: [badgeMix],
+  data () {
+    return {
+
     }
   }
+}
 </script>
 
 <style lang="scss">
-
 </style>

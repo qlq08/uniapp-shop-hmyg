@@ -52,7 +52,9 @@
 </template>
 
 <script>
+import badgeMix from '../../mixins/tabbar_badge'
 export default {
+  mixins: [badgeMix],
   data () {
     return {
       // 当前设备可用的高度

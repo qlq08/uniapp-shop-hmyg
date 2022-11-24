@@ -28,7 +28,7 @@
         </view>
       </view>
       <!-- 运费 -->
-      <view class="yf">快递:免运费 </view>
+      <view class="yf">快递:免运费</view>
     </view>
     <!-- 商品详情信息  -->
     <rich-text :nodes="goods_info.goods_introduce" />
@@ -48,9 +48,28 @@
 </template>
 
 <script>
-import uniIcons from '../../uni_modules/uni-icons/components/uni-icons/uni-icons.vue'
+import { mapState, mapMutations, mapGetters } from 'vuex'
 export default {
-  components: { uniIcons },
+  watch: {
+    // 页面首次加载完毕后，不会调用这个侦听器
+    /*   total (newVal) {
+        // 1. 监听 total 值的变化，通过第一个形参得到变化后的新值
+        const findResult = this.options.find(x => x.text === "购物车")
+        if (findResult) {
+          findResult.info = newVal
+        }
+      } */
+    total: {
+      handler (newVal) {
+        // 1. 监听 total 值的变化，通过第一个形参得到变化后的新值
+        const findResult = this.options.find(x => x.text === "购物车")
+        if (findResult) {
+          findResult.info = newVal
+        }
+      },
+      immediate: true
+    }
+  },
   data () {
     return {
       goods_info: {},
@@ -62,7 +81,7 @@ export default {
       }, {
         icon: 'cart',
         text: '购物车',
-        info: 9
+        info: 0
       }],
       buttonGroup: [{
         text: '加入购物车',
@@ -93,6 +112,13 @@ export default {
       }]
     }
   },
+  computed: {
+    // 调用 mapState 方法，把 m_cart 模块中的 cart 数组映射到当前页面中，作为计算属性来使用
+    // ...mapState('模块的名称', ['要映射的数据名称1', '要映射的数据名称2'])
+    ...mapState('m_cart', ['cart']),
+    // 把 m_cart 模块中名称为 total 的 getter 映射到当前页面中使用
+    ...mapGetters('m_cart', ['total'])
+  },
   onLoad (options) {
     // 获取商品 Id
     const goods_id = options.goods_id
@@ -100,6 +126,7 @@ export default {
     this.getGoodsDetail(goods_id)
   },
   methods: {
+    ...mapMutations('m_cart', ['addToCart']),
     async getGoodsDetail (goods_id) {
       const { data: res } = await uni.$http.get("/api/public/v1/goods/detail", { goods_id })
       // 请求失败
@@ -122,11 +149,33 @@ export default {
     },
     onClick (e) {
       if (e.content.text === '购物车') {
-        // swtichTab适合跳转到tabbar页面，navigateTo适合跳转到非tabbar页面
+        // swtichTab适合跳转到tabbar页面，navigateTo适合跳转到非tabBar页面
         uni.switchTab({
           url: '/pages/cart/cart',
         })
 
+      }
+    },
+    buttonClick (e) {
+      if (e.content.text === "加入购物车") {
+        // 组织商品的信息对象
+        // { goods_id, goods_name, goods_price, goods_count, goods_small_logo, goods_state }
+        const goods = {
+          goods_id: this.goods_info.goods_id,
+          goods_name: this.goods_info.goods_name,
+          goods_price: this.goods_info.goods_price,
+          goods_count: 1,
+          goods_small_logo: this.goods_info.goods_small_logo,
+          goods_state: true,
+
+        }
+
+        // 调用 addToCart
+
+        this.addToCart(goods)
+        /*   uni.switchTab({
+            url: '/pages/cart/cart'
+          }) */
       }
     }
   },
